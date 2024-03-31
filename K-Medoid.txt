@@ -1,0 +1,38 @@
+% Load the dataset
+data = readtable('C:\Users\adith\OneDrive\Desktop\giri.csv');
+
+% Select attributes for clustering
+attributes = data{:, 6:11}; % Selecting columns 6 to 11 as attributes
+
+% Normalize the data
+normalized_data = normalize(attributes);
+
+% Define the number of clusters (k)
+k = 3; % You can adjust this value as needed
+
+% Perform k-medoids clustering
+% Note: There's no direct k-medoids function, but you can use kmeans and
+% then replace centroids with medoids
+[idx, centroids] = kmeans(normalized_data, k);
+
+% Replace centroids with medoids
+medoids = zeros(k, size(normalized_data, 2));
+for i = 1:k
+    cluster_indices = find(idx == i);
+    distances = pdist2(normalized_data(cluster_indices, :), normalized_data(cluster_indices, :));
+    [~, min_index] = min(sum(distances));
+    medoids(i, :) = normalized_data(cluster_indices(min_index), :);
+end
+
+% Compute distances from each data point to medoids
+distances_to_medoids = pdist2(normalized_data, medoids);
+
+% Assign data points to clusters based on the nearest medoid
+[~, cluster_assignment] = min(distances_to_medoids, [], 2);
+
+% Visualize the clusters (optional)
+scatter3(attributes(:,1), attributes(:,2), attributes(:,3), 10, cluster_assignment, 'filled');
+xlabel('Seat Comfort');
+ylabel('Cabin Staff Service');
+zlabel('Food and Beverages');
+title('K-Medoids Clustering of Airline Dataset');

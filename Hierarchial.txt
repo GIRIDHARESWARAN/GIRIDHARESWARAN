@@ -1,0 +1,27 @@
+% Load the dataset
+data = readtable('C:\Users\adith\OneDrive\Desktop\giri.csv');
+
+% Select attributes for clustering
+attributes = data{:, 6:11}; % Selecting columns 6 to 11 as attributes
+
+% Normalize the data
+normalized_data = normalize(attributes);
+
+% Perform hierarchical clustering
+Z = linkage(normalized_data, 'ward', 'euclidean');
+
+% Set the number of clusters
+k = 3;
+
+% Perform clustering and get cluster indices
+clusters = cluster(Z, 'Maxclust', k);
+
+% Visualize the dendrogram (optional)
+dendrogram(Z);
+
+% Visualize the clusters (optional)
+scatter3(attributes(:,1), attributes(:,2), attributes(:,3), 10, clusters, 'filled');
+xlabel('Seat Comfort');
+ylabel('Cabin Staff Service');
+zlabel('Food and Beverages');
+title('Hierarchical Clustering of Airline Dataset');

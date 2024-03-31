@@ -1,0 +1,21 @@
+% Load the dataset
+data = readtable('C:\Users\adith\OneDrive\Desktop\giri.csv');
+
+% Select attributes for clustering
+attributes = data{:, 6:11}; % Selecting columns 6 to 11 as attributes
+
+% Normalize the data
+normalized_data = normalize(attributes);
+
+% Define the number of clusters (k)
+k = 3; % You can adjust this value as needed
+
+% Perform k-means clustering
+[idx, centroids] = kmeans(normalized_data, k);
+
+% Visualize the clusters (optional)
+scatter3(attributes(:,1), attributes(:,2), attributes(:,3), 10, idx, 'filled');
+xlabel('Seat Comfort');
+ylabel('Cabin Staff Service');
+zlabel('Food and Beverages');
+title('K-Means Clustering of Airline Dataset');
